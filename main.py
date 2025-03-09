@@ -13,7 +13,7 @@ resolver = aiodns.DNSResolver()
 domain_cache = cachetools.TTLCache(maxsize=1000, ttl=600)
 
 @app.get("/check")
-@limiter.limit("30/minute")
+@limiter.limit("10/minute")
 async def check_domain(domain: str):
     if domain in domain_cache:
         return {"domain": domain, "available": domain_cache[domain]}
