@@ -1,5 +1,6 @@
 README.md
 LICENSE
 docker-compose.yml
+vercel.json
 .gitignore
 .git
