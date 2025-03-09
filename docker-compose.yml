@@ -1,0 +1,7 @@
+services:
+  api:
+    container_name: domain_available_api
+    image: ghcr.io/arbs09/domain_available_api:main
+    ports:
+      - 8000:8000
+    
