@@ -7,17 +7,18 @@ import asyncio
 
 limiter = Limiter(key_func=get_remote_address)
 app = FastAPI()
+limiter.init_app(app)
 
 resolver = aiodns.DNSResolver()
 
 domain_cache = cachetools.TTLCache(maxsize=1000, ttl=600)
 
 @app.get("/check")
-@limiter.limit("10/minute")
-async def check_domain(domain: str):
+@limiter.limit("30/minute")
+async def check_domain(request, domain: str):  # Added 'request' parameter
     if domain in domain_cache:
         return {"domain": domain, "available": domain_cache[domain]}
-
+    
     try:
         result = await asyncio.wait_for(resolver.query(domain, 'NS'), timeout=3)
         domain_cache[domain] = False
@@ -29,7 +30,6 @@ async def check_domain(domain: str):
         raise HTTPException(status_code=408, detail="DNS query timeout")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
