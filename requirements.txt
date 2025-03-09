@@ -1,0 +1,5 @@
+fastap
+slowapi
+aiodns
+cachetools
+uvicorn
